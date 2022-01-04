@@ -1,3 +1,4 @@
+// WHEN I search for a city
 $('#search-button').on('click', function(event){
     var userInput = $('#city-input').val();
     event.preventDefault();
@@ -30,58 +31,89 @@ var weather = function(userInput) {
     .catch(console.error);
 }
 
+//WHEN I view current weather conditions for that city
 function displayWeather(data) {
-    var temperature = data['main']['temp'];
-    var date = moment().format('MM/DD/YYYY');
-    var humidity = data['main']['humidity'];
-    var wind = data['wind'];
-    var latitude = data['coord']['lat'];
-    var longitude = data['coord']['lon'];
+  var kelvinTemp = data["main"]["temp"];
+  var temperature = (kelvinTemp - 273.15) * 1.8 + 32;
+  var date = moment().format("MM/DD/YYYY");
+  console.log(date);
+  var humidity = data["main"]["humidity"];
+  var wind = data["wind"];
 
-    $("#city-name").text("City Name: " + data.name);
-    $("#current-temp").text("Temperature: " + data.main.temp + "°F");
-    $("#current-humidity").text("Humidity: " + data.main.humidity + "%");
-    $("#current-wind").text("Wind: " + data.wind.speed + "MPH");
+  var latitude = data["coord"]["lat"];
+  var longitude = data["coord"]["lon"];
+  // new API for uv index information
+  var coordinateURL =
+    "https://api.openweathermap.org/data/2.5/uvi?appid=e5f561d692ee5b0d5bfef99cb764f31d&lat=" +
+    latitude +
+    "&lon=" +
+    longitude;
+
+  $.ajax({
+    url: coordinateURL,
+    method: "GET",
+  }).then(function (uvIndex) {
+    var currentUV = uvIndex.value;
+
+    $("#current-uv").text("UV: " + currentUV);
+    console.log(uvIndex.value);
+  });
+
+  // THEN I am presented with the city name, the date,
+  // an icon representation of weather conditions,
+  // the temperature, the humidity, the wind speed, and the UV index
+  $("#city-name").text(data.name + " " + date);
+  $("#current-temp").text("Temperature: " + temperature.toFixed(1) + "°F");
+  $("#current-humidity").text("Humidity: " + data.main.humidity + "%");
+  $("#current-wind").text("Wind: " + data.wind.speed + "MPH");
 }
 
 // Fetch 5-Day Weather
-var fiveDayWeather = function(userInput) {
-    fetch("https://api.openweathermap.org/data/2.5/forecast/daily?q=" + userInput + "&appid=293af217c8a05dd02fb63f4741d095dd")
-    .then((response) => {
-        if (!response.ok) throw new Error(response.statusText);
-            return response.json();
-    }).then(data => {
-        console.log(data);
-        displayFiveDayWeather(data)
-    }).catch(console.error);
+var forecastList = document.querySelector('#forecast-weather');
+
+function getFiveDay(){
+    var requestUrl =
+      "https://api.openweathermap.org/data/2.5/forecast?q=&appid=293af217c8a05dd02fb63f4741d095dd";
+
+    fetch(requestUrl)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        for (var i = 0; i < data.length; i++) {
+            var listItem = document.getElementById('#forecast-cards');
+            listItem.textContent = data[i];
+
+        }
+    });
 }
 
-// function displayFiveDayWeather(data) {
-//     var temp = data['main']['temp'];
+function displayFiveDay(){
+    var temperature = data.length;
+}
+$("#forecast-temp1").text();
 
-//     $('#forecast-temp1').text("Temp: " + data.main.temp + "°F");
-// };
 
-
+// and that city is added to the search history
 var cityHistory = [];
-var renderCities = function () {
-  $("#city-input").empty();
+var renderCities = function() {
+  $("#city-list").empty();
 
   for (i = 0; i < cityHistory.length; i++) {
     var cityDiv = $("<div>").attr("id", "city" + [i]);
     var cityBtn = $("<button>").text(cityHistory[i]).addClass("city-btn");
     var displayDiv = $(cityDiv).prepend(cityBtn);
 
-    $("#city-input").prepend(displayDiv);
+    $("#city-list").prepend(displayDiv);
 
-    localStorage.setItem("key" + [i], cityHistory[i]);
+    localStorage.setItem("city" + [i], cityHistory[i]);
   }
 
   $(".city-button").on("click", function () {
     var cityInput = $(this).text;
-    $("forecast-cards").empty();
+    $("#forecast-cards").empty();
     $("#current-icon").empty();
 
     weather(cityInput);
   });
-};
+}
