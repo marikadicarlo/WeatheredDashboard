@@ -40,6 +40,9 @@ function displayWeather(data) {
   var humidity = data["main"]["humidity"];
   var wind = data["wind"];
 
+  var icon = data.weather[0];
+  document.querySelector("#current-icon").src =
+    "http://openweathermap.org/img/wn/" + icon + ".png";
   var latitude = data["coord"]["lat"];
   var longitude = data["coord"]["lon"];
   // new API for uv index information
@@ -67,31 +70,8 @@ function displayWeather(data) {
   $("#current-humidity").text("Humidity: " + data.main.humidity + "%");
   $("#current-wind").text("Wind: " + data.wind.speed + "MPH");
 }
-
 // Fetch 5-Day Weather
-var forecastList = document.querySelector('#forecast-weather');
 
-function getFiveDay(){
-    var requestUrl =
-      "https://api.openweathermap.org/data/2.5/forecast?q=&appid=293af217c8a05dd02fb63f4741d095dd";
-
-    fetch(requestUrl)
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function(data) {
-        for (var i = 0; i < data.length; i++) {
-            var listItem = document.getElementById('#forecast-cards');
-            listItem.textContent = data[i];
-
-        }
-    });
-}
-
-function displayFiveDay(){
-    var temperature = data.length;
-}
-$("#forecast-temp1").text();
 
 
 // and that city is added to the search history
