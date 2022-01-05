@@ -10,11 +10,10 @@ $('#search-button').on('click', function(event){
     cityHistory.push(userInput);
     weather(userInput);
     renderCities();
-
+  
     $('#forecast-weather').empty();
     $('#current-icon').empty();
     $('#city-input').val("");
-
 });
 
 // Fetch Current Weather
@@ -31,6 +30,7 @@ var weather = function(userInput) {
     .catch(console.error);
 }
 
+
 //WHEN I view current weather conditions for that city
 function displayWeather(data) {
   var kelvinTemp = data["main"]["temp"];
@@ -39,6 +39,9 @@ function displayWeather(data) {
   console.log(date);
   var humidity = data["main"]["humidity"];
   var wind = data["wind"];
+  var weatherIcon = $("<img>");
+  var icon = data.weather[0].icon;
+  weatherIcon.attr("src", "https://openweathermap.org/img/wn/" + icon + ".png");
 
   var icon = data.weather[0];
   document.querySelector("#current-icon").src =
@@ -69,8 +72,9 @@ function displayWeather(data) {
   $("#current-temp").text("Temperature: " + temperature.toFixed(1) + "°F");
   $("#current-humidity").text("Humidity: " + data.main.humidity + "%");
   $("#current-wind").text("Wind: " + data.wind.speed + "MPH");
+  $("#current-icon").append(weatherIcon);
 }
-// Fetch 5-Day Weather
+
 
 
 
@@ -90,7 +94,7 @@ var renderCities = function() {
   }
 
   $(".city-button").on("click", function () {
-    var cityInput = $(this).text;
+    var cityInput = $(this).text();
     $("#forecast-cards").empty();
     $("#current-icon").empty();
 
