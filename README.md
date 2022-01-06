@@ -1,7 +1,7 @@
 # WeatheredDashboard
-[Link to Website] (https://marikadicarlo.github.io/WeatheredDashboard/)
+[Link to Weather Dashboard](https://marikadicarlo.github.io/WeatheredDashboard/)
 
-![weather-dashboard] (./assets.WeatherDashboard.png)
+![weather-dashboard](./assets/WeatherDashboard.png)
 
 This challenge required me to use a third-party API to build a weather dashboard for user's to use. I used OpenWeather One Call API to retrieve weather data for different cities. This app allows users to search for a city, and are then presented with current and future weather conditions for that city, and the city is added to the search history.
 
