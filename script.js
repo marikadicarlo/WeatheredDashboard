@@ -9,11 +9,13 @@ $('#search-button').on('click', function(event){
 
     cityHistory.push(userInput);
     weather(userInput);
+    forecast(userInput);
     renderCities();
   
-    $('#forecast-weather').empty();
+    $('#five-day-content').empty();
     $('#current-icon').empty();
     $('#city-input').val("");
+
 });
 
 // Fetch Current Weather
@@ -29,6 +31,22 @@ var weather = function(userInput) {
     })
     .catch(console.error);
 }
+var forecast = function (userInput) {
+  fetch(
+    "https://api.openweathermap.org/data/2.5/forecast?q=" +
+      userInput +
+      "&appid=293af217c8a05dd02fb63f4741d095dd"
+  )
+    .then((response) => {
+      if (!response.ok) throw new Error(response.statusText);
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      displayForecast(data);
+    })
+    .catch(console.error);
+};
 
 
 //WHEN I view current weather conditions for that city
@@ -63,6 +81,7 @@ function displayWeather(data) {
 
     $("#current-uv").text("UV: " + currentUV);
     console.log(uvIndex.value);
+    $("#current-uv").css({"background-color": "rgb(243, 57, 88","color": "white", "border-radius": "5px", "padding": "3px"})
   });
 
   // THEN I am presented with the city name, the date,
@@ -75,7 +94,33 @@ function displayWeather(data) {
   $("#current-icon").append(weatherIcon);
 }
 
+function displayForecast(data) {
+  for (i = 2; i < 40; i += 8){
+    var forecastDiv = $("<div>").attr("id", "number" + [i]).addClass("col-2 five-days");
 
+    var weekday = data.list[i].dt_txt;
+    weekday = weekday.slice(0, 10);
+    weekday = moment(weekday).format("MM/DD/YYYY");
+    weekday = $("<p>").text(weekday);
+
+    var weekIcon = data.list[i].weather[0].icon;
+    weekIcon = $("<img>").attr("src", "https://openweathermap.org/img/w/" + weekIcon + ".png");
+    
+
+    var weekHumidity = data.list[i].main.humidity;
+    weekHumidity = $("<p>").text("Humidity: " + weekHumidity + "%");
+
+    var weekTemp = data.list[i].main.temp;
+    var farWeekTemp = (weekTemp - 273.15) * 1.80 + 32;
+    farWeekTemp = $("<p>").text("Temp: " + farWeekTemp.toFixed(1) + "°F");
+
+    var weekWind = data.list[i].wind.speed;
+    weekWind = $("<p>").text("Wind: " + weekWind + "MPH");
+
+    var finalDiv = $(forecastDiv).append(weekday, weekIcon, farWeekTemp, weekHumidity, weekWind);
+    $("#five-day-content").append(finalDiv);
+  }
+}
 
 
 // and that city is added to the search history
@@ -93,7 +138,7 @@ var renderCities = function() {
     localStorage.setItem("city" + [i], cityHistory[i]);
   }
 
-  $(".city-button").on("click", function () {
+  $(".city-btn").on("click", function () {
     var cityInput = $(this).text();
     $("#forecast-cards").empty();
     $("#current-icon").empty();
