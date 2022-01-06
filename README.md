@@ -1,10 +1,11 @@
 # WeatheredDashboard
-[Link to Website] ()
+[Link to Website] (https://marikadicarlo.github.io/WeatheredDashboard/)
 
-![weather-dashboard] ()
+![weather-dashboard] (./assets.WeatherDashboard.png)
 
 This challenge required me to use a third-party API to build a weather dashboard for user's to use. I used OpenWeather One Call API to retrieve weather data for different cities. This app allows users to search for a city, and are then presented with current and future weather conditions for that city, and the city is added to the search history.
 
+I had multiple difficulties with this weather dashboard challenge. The biggest challenge I had was displaying the information being pulled form the weather API. I was able to see it in the console log, but I ran into problems trying to display it to the webpage. 
 
 
 ## User Story
