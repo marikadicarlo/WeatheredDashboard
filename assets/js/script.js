@@ -81,7 +81,7 @@ function displayWeather(data) {
 
     $("#current-uv").text("UV: " + currentUV);
     console.log(uvIndex.value);
-    $("#current-uv").css({"background-color": "rgb(243, 57, 88","color": "white", "border-radius": "5px", "padding": "3px"})
+    $("#current-uv").css({"background-color": "rgb(243, 57, 88", "color": "white", "border-radius": "5px", "padding": "3px"})
   });
 
   // THEN I am presented with the city name, the date,
